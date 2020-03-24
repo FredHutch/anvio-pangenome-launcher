@@ -42,6 +42,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/run.ext
+          asset_path: ./dist/run.exe
           asset_name: launch_anvio.exe
           asset_content_type: application/exe
