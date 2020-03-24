@@ -24,7 +24,7 @@ jobs:
             pip install pyinstaller
       - name: build with pyinstaller
         run: |
-            pyinstaller --onefile run.py
+            pyinstaller --onefile --hidden-import docker run.py
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
