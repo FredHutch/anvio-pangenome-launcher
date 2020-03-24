@@ -44,4 +44,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/run/run
           asset_name: launch_anvio
-          asset_content_type: application
+          asset_content_type: application/octet-stream
