@@ -1,11 +1,11 @@
-name: Windows-PyInstaller
+name: OSX-PyInstaller
 
 on: [push]
 
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: macOS-latest
 
     steps:
     - uses: actions/checkout@v1
