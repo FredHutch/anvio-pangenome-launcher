@@ -19,4 +19,4 @@ jobs:
         pip install pyinstaller
     - name: build with pyinstaller
       run: |
-        pyinstaller run.py
+        pyinstaller --onefile run.py
