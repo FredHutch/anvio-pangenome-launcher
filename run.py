@@ -105,11 +105,15 @@ def wait_for_database(container, pause = 1, max_time = 600):
     start_time = time()
     while (time() - start_time) < max_time:
         if "Gene clusters are initialized for all" in str(container.logs()):
-            sleep(2)
+            for _ in range(10):
+                print(".", end="", flush=True)
+                sleep(pause)
+            print("")
             logging.info("Server is ready")
             return
         else:
             sleep(pause)
+            print(".", end="", flush=True)
     msg = "Timed out after waiting {} seconds for the server to load".format(max_time)
     assert False, msg
 
@@ -147,35 +151,107 @@ if __name__ == "__main__":
 
     # Find the files to launch
     logging.info("Finding input files")
-    genome_db_fp, pan_db_fp = find_anvio_db_files(root)
+
+    try:
+        genome_db_fp, pan_db_fp = find_anvio_db_files(root)
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
+
 
     # Set up the Docker client
-    docker_client = docker.from_env()
+    try:
+        docker_client = docker.from_env()
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
 
     # Make sure that we have the Docker image
     logging.info("Checking for Docker image")
-    check_for_docker_image(
-        docker_client, 
-        docker_image = args.image
-    )
+    try:
+        check_for_docker_image(
+            docker_client, 
+            docker_image = args.image
+        )
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
 
     logging.info("Launching Docker image")
-    container = launch_image(
-        docker_client, 
-        args.image,
-        genome_db_fp, 
-        pan_db_fp
-    )
+    try:
+        container = launch_image(
+            docker_client, 
+            args.image,
+            genome_db_fp, 
+            pan_db_fp
+        )
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
 
-    # Make sure to kill the container when this task ends    
-    atexit.register(container.kill)
+    # Make sure to kill the container when this task ends
+    try:
+        atexit.register(container.kill)
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
 
     logging.info("Waiting for database to load")
-    wait_for_database(container)
+    try:
+        wait_for_database(container)
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
 
     logging.info("Launching the browser")
-    launch_browser()
-    
+    try:
+        launch_browser()
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
+
     logging.info("Close this window to shut down the server")
 
     # Print all of the output to the terminal
