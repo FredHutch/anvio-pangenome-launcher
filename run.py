@@ -63,6 +63,26 @@ def find_anvio_db_files(root):
     return genome_db_fp, pan_db_fp
 
 
+def clean_up_containers(client, pause=5):
+    """Remove any running containers."""
+
+    # Get the list of running containers
+    for container in client.containers.list():
+
+        if container.status == "running":
+
+            logging.info("Stopping running container: {} ({})".format(
+                container.image,
+                container.short_id
+            ))
+
+            # Issue the kill command
+            container.kill()
+
+            # Wait to let the container stop
+            sleep(pause)
+
+
 def check_for_docker_image(client, docker_image="meren/anvio:5.5"):
     """Make sure the appropriate Docker image is present."""
 
@@ -168,6 +188,20 @@ if __name__ == "__main__":
     # Set up the Docker client
     try:
         docker_client = docker.from_env()
+    except Exception as inst:
+        logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
+        logging.info("----")
+        logging.info("ERROR MESSAGE BELOW")
+        logging.info("----")
+        logging.info(inst)
+        logging.info("----")
+        input("Press Enter to close window...")
+        exit()
+
+    # Clean up any running containers using the port we need
+    logging.info("Removing any running containers")
+    try:
+        clean_up_containers(docker_client)
     except Exception as inst:
         logging.info("ANVIO LAUNCHER ENCOUNTERED AN ERROR")
         logging.info("----")
